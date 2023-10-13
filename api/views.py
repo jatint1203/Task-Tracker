@@ -23,7 +23,7 @@ def APIoverview(requests):
  
 @api_view(['GET'])
 def task_list(request):
-    query = Task.objects.all()
+    query = Task.objects.all().order_by('-id').values()
     serializer = TodoModelSerializer(query, many=True)
     return Response(serializer.data)
 
