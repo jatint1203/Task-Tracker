@@ -1,6 +1,6 @@
 # Task-Tracker Architech Assesment
 
-1 => Clone the repository
+1 => Clone the repository (https://github.com/jatint1203/Task-Tracker.git)
 
 2 => Go to ArchitechAssement folder (i.e. cd ArchitechAssement)
 
