@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+
+{% block head %}
+
+<style>
+    table {
+        margin: 0 auto;
+        font-size: large;
+        border: 1px solid black;
+    }
+
+    h1 {
+        text-align: center;
+        color: #006600;
+        font-size: xx-large;
+        font-family: 'Gill Sans',
+            'Gill Sans MT', ' Calibri',
+            'Trebuchet MS', 'sans-serif';
+    }
+
+    td {
+        background-color: #E4F5D4;
+        border: 1px solid black;
+    }
+
+    th,
+    td {
+        font-weight: bold;
+        border: 1px solid black;
+        padding: 10px;
+        text-align: center;
+    }
+
+    td {
+        font-weight: lighter;
+    }
+</style>
+
+{% endblock head %}
+
+{% block body %}
+
+<h2 style="margin: 10px; margin-bottom: 40; text-align: center; color: red;">Task Tracker</h2>
+
+<table>
+
+
+
+
+    <table id='table'>
+
+        </section>
+
+       
+        <tr>
+            <th>Id</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Status</th>
+
+            <th>Delete</th>
+            <th>Update</th>
+
+        </tr>
+
+        <tbody id='get-data'>
+
+        </tbody>
+    </table>
+
+
+    <script>
+
+
+        url = 'http://127.0.0.1:8000/api/task_list';
+
+        let task_list = fetch(url).then(response => response.json()).then(function (data) {
+
+            console.log(data)
+
+            let placeholder = document.querySelector("#get-data");
+            let out = "";
+            for (let datas of data) {
+                out += `
+         <tr>
+        
+            <td>${datas.id}</td>
+            <td>${datas.title}</td>
+            <td>${datas.description}</td>
+            <td>${datas.status}</td>
+        
+            <td> <button type="button" class="btn btn-primary" value=${datas.id} name=${datas.id} id=${datas.id}  onclick="delete_task(id);"> Delete</button> </td>
+            <td> <button type="button" class="btn btn-danger"  value=${datas.id} name=${datas.id} id=${datas.id} onclick="update_task(id);"  > Update </button> </td>
+         </tr>
+      `;
+            }
+
+            placeholder.innerHTML = out;
+
+        }
+
+        )
+
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function update_task(id) {
+
+
+            url = "http://127.0.0.1:8000/api/task_update/" + id + "/"
+
+
+
+            window.location.href = "http://127.0.0.1:8000/update_task?id="+ id;
+           
+
+        }
+
+        function delete_task(id) {
+
+
+            var csrftoken = getCookie('csrftoken');
+            url = "http://127.0.0.1:8000/api/task_delete/" + id + "/";
+            console.log(url);
+
+          
+            fetch(url, {
+                method: 'DELETE',
+                headers: {
+                    'Content-type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+
+            }
+            ).then(alert("Task Deleted!"),
+                window.location.reload()
+
+            )
+
+
+        }
+
+    </script>
+
+
+    {% endblock body %}

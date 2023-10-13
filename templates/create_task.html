@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+
+{% block head %}
+
+<style>
+  .form_style {
+
+    width: 60%;
+    margin: 40px;
+
+  }
+</style>
+
+{% endblock head %}
+
+{% block body %}
+
+
+
+<form id="form">
+
+  <div class="form_style">
+    <div class="mb-4">
+      <label for="formGroupExampleInput" class="form-label">Title *</label>
+      <input type="text" class="form-control" id="title" name="title" placeholder="Enter Title of the task" required>
+    </div>
+    <div class="mb-3">
+      <label for="formGroupExampleInput2" class="form-label">Description *</label>
+      <input type="text" class="form-control" id="desc" name="desc" placeholder="Enter Title of the task" required>
+
+
+    </div>
+    <div class="mb-3">
+      <label for="formGroupExampleInput2" class="form-label">Status</label> <br>
+      <select name="status" id="status" required style="width: 200px; height: 50px;">
+        <option value="Completed">Completed</option>
+        <option value="Pending">Pending</option>
+
+      </select>
+
+
+    </div>
+
+    <button type="button" id="submit" class="btn btn-primary" onclick="field_check();">Submit</button>
+  </div>
+
+  <script>
+
+    function field_check(){
+
+      if(document.getElementById('title').value != ''){
+
+       
+        create_task();
+      }
+      else{alert("Fill All the Mandatory Fields");}
+    
+      
+    }
+
+    function getCookie(name) {
+      var cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+          var cookie = cookies[i].trim();
+          // Does this cookie string begin with the name we want?
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+
+    var csrftoken = getCookie('csrftoken');
+
+     
+    function create_task() {
+      var title = document.getElementById('title').value
+      var desc = document.getElementById('desc').value
+      var status = document.getElementById('status').value
+
+
+       console.log(title, desc, status);
+
+      var url = "http://127.0.0.1:8000/api/task_create"; 
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json',
+          'X-CSRFToken': csrftoken
+        },
+        body: JSON.stringify({ 'title': title, 'description': desc, 'status': status })
+      }
+      ).then(alert("Task Created Successfully !"),
+      // window.location.reload()
+      )
+
+    }
+
+
+
+  </script>
+
+</form>
+
+
+{% endblock body %}
